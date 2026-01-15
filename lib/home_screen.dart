@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skribby/create_room_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,15 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     Size(MediaQuery.of(context).size.width / 2.5, 50),
                   ),
                 ),
-                child: const Text(
-                  "Create",
-                  style: TextStyle(
-                    fontSize: 16
-                  ),
-                ),
+                child: const Text("Create", style: TextStyle(fontSize: 16)),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const CreateRoomScreen()),
+                ),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.blue),
                   textStyle: MaterialStateProperty.all(
@@ -52,12 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Size(MediaQuery.of(context).size.width / 2.5, 50),
                   ),
                 ),
-                child: const Text(
-                  "Join",
-                  style: TextStyle(
-                    fontSize: 16
-                  ),
-                ),
+                child: const Text("Join", style: TextStyle(fontSize: 16)),
               ),
             ],
           ),
