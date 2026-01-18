@@ -40,7 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Size(MediaQuery.of(context).size.width / 2.5, 50),
                   ),
                 ),
-                child: const Text("Create", style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  "Create",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).push(
@@ -57,7 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Size(MediaQuery.of(context).size.width / 2.5, 50),
                   ),
                 ),
-                child: const Text("Join", style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  "Join",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
               ),
             ],
           ),
