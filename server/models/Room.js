@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {playerSchema} = require('./Player');
 
 const roomSchema = new mongoose.Schema({
     word: {
@@ -36,3 +37,6 @@ const roomSchema = new mongoose.Schema({
         default: 0,
     }
 })
+
+const gameModel = mongoose.model('Room', roomSchema);
+module.exports = gameModel;
