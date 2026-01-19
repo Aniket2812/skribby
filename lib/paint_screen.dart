@@ -12,7 +12,7 @@ class PaintScreen extends StatefulWidget {
 
 class _PaintScreenState extends State<PaintScreen> {
   late IO.Socket _socket;
-  String dataOfRoom = "";
+  Map dataOfRoom = {};
   @override
   void initState() {
     super.initState();
@@ -49,8 +49,26 @@ class _PaintScreenState extends State<PaintScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(),
+      body: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: width,
+                height: height*0.55,
+                child: GestureDetector(
+                  
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
