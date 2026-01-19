@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class PaintScreen extends StatefulWidget {
-  final Map data;
+  final Map<String, String> data;
   final String screenFrom;
   PaintScreen({required this.data, required this.screenFrom});
 
@@ -21,7 +21,7 @@ class _PaintScreenState extends State<PaintScreen> {
 
   //socket.io client connection
   void connect() {
-    _socket = IO.io('http://192.168.0.104:3000', <String, dynamic>{
+    _socket = IO.io('http://192.168.0.106:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
@@ -29,6 +29,8 @@ class _PaintScreenState extends State<PaintScreen> {
     print('connected');
     if (widget.screenFrom == 'createRoom') {
       _socket.emit('create-game', widget.data);
+    } else {
+      _socket.emit('join-game', widget.data);
     }
 
     //listen to socket
