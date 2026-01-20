@@ -56,7 +56,7 @@ class _PaintScreenState extends State<PaintScreen> {
       _socket.on('points', (point) {
         if (point['details'] == null) {
           setState(() {
-            points.add(null); 
+            points.add(null);
           });
           return;
         }
@@ -84,6 +84,14 @@ class _PaintScreenState extends State<PaintScreen> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    void selectedColor() {
+      showDialog(context: context, builder: (context) => AlertDialog(
+        title: const Text('Choose Color'),
+        content: SingleChildScrollView(
+        ),
+      ));
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -136,6 +144,28 @@ class _PaintScreenState extends State<PaintScreen> {
                     ),
                   ),
                 ),
+              ),
+              Row(
+                children: [
+                  // IconButton(
+                  //   icon: Icon(Icons.color_lens, color: selectedColor),
+                  //   onPressed: () {},
+                  // ),
+                  Expanded(
+                    child: Slider(
+                      min: 1.0,
+                      max: 10.0,
+                      label: "Stroke Width $strokeWidth",
+                      // activeColor: selectedColor,
+                      value: strokeWidth,
+                      onChanged: (double value) {},
+                    ),
+                  ),
+                  // IconButton(
+                  //   icon: Icon(Icons.layers_clear, color: selectedColor),
+                  //   onPressed: () {},
+                  // ),
+                ],
               ),
             ],
           ),
