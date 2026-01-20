@@ -15,7 +15,11 @@ class PaintScreen extends StatefulWidget {
 class _PaintScreenState extends State<PaintScreen> {
   late IO.Socket _socket;
   Map dataOfRoom = {};
-  List<TouchPoints> points = [];
+  List<TouchPoints?> points = [];
+  StrokeCap strokeType = StrokeCap.round;
+  Color selectedColor = Colors.black;
+  double opacity = 1;
+  double strokeWidth = 2;
 
   @override
   void initState() {
@@ -47,6 +51,31 @@ class _PaintScreenState extends State<PaintScreen> {
         if (roomData['isJoin'] != true) {
           //start the timer
         }
+      });
+
+      _socket.on('points', (point) {
+        if (point['details'] == null) {
+          setState(() {
+            points.add(null); 
+          });
+          return;
+        }
+
+        setState(() {
+          points.add(
+            TouchPoints(
+              points: Offset(
+                (point['details']['dx']).toDouble(),
+                (point['details']['dy']).toDouble(),
+              ),
+              paint: Paint()
+                ..strokeCap = strokeType
+                ..isAntiAlias = true
+                ..color = selectedColor.withOpacity(opacity)
+                ..strokeWidth = strokeWidth,
+            ),
+          );
+        });
       });
     });
   }
