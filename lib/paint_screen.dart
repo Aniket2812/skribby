@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:skribby/models/my_custom_painter.dart';
+import 'package:skribby/models/touch_points.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class PaintScreen extends StatefulWidget {
@@ -13,6 +15,8 @@ class PaintScreen extends StatefulWidget {
 class _PaintScreenState extends State<PaintScreen> {
   late IO.Socket _socket;
   Map dataOfRoom = {};
+  List<TouchPoints> points = [];
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +44,7 @@ class _PaintScreenState extends State<PaintScreen> {
         setState(() {
           dataOfRoom = roomData;
         });
-        if(roomData['isJoin'] != true) {
+        if (roomData['isJoin'] != true) {
           //start the timer
         }
       });
@@ -51,7 +55,9 @@ class _PaintScreenState extends State<PaintScreen> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Column(
@@ -60,13 +66,50 @@ class _PaintScreenState extends State<PaintScreen> {
             children: [
               Container(
                 width: width,
-                height: height*0.55,
+                height: height * 0.55,
                 child: GestureDetector(
-                  
+                  onPanUpdate: (details) {
+                    print(details.localPosition);
+                    _socket.emit('paint', {
+                      'details': {
+                        'dx': details.localPosition.dx,
+                        'dy': details.localPosition.dy,
+                      },
+                      'roomName': widget.data['name'],
+                    });
+                  },
+                  onPanStart: (details) {
+                    print(details.localPosition);
+                    _socket.emit('paint', {
+                      'details': {
+                        'dx': details.localPosition.dx,
+                        'dy': details.localPosition.dy,
+                      },
+                      'roomName': widget.data['name'],
+                    });
+                  },
+                  onPanEnd: (details) {
+                    print(details.localPosition.dx);
+                    _socket.emit('paint', {
+                      'details': null,
+                      'roomName': widget.data['name'],
+                    });
+                  },
+                  child: SizedBox.expand(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      child: RepaintBoundary(
+                        child: CustomPaint(
+                          size: Size.infinite,
+                          painter: MyCustomPainter(pointslist: points),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
