@@ -85,14 +85,23 @@ io.on('connection', (socket) => {
         }
     })
 
-    //white board socket
-    socket.on('paint', ({details, roomName}) => {
-        io.to(roomName).emit('points', {details: details});
+    //white board socket - broadcast to others, not back to sender
+    socket.on('paint', ({ details, roomName }) => {
+        socket.broadcast.to(roomName).emit('points', { details: details });
     })
 
     //color socket
-    socket.on('color-change', ({color, roomName}) => {
+    socket.on('color-change', ({ color, roomName }) => {
         io.to(roomName).emit('color-change', color);
+    })
+
+    //chat message socket
+    socket.on('msg', ({ message, roomName, username }) => {
+        io.to(roomName).emit('msg', {
+            username: username,
+            message: message,
+            isSystemMessage: false
+        });
     })
 })
 
