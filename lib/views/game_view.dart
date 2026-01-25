@@ -5,7 +5,7 @@ import 'package:skribby/viewmodels/game_viewmodel.dart';
 import 'package:skribby/widgets/canvas/drawing_canvas.dart';
 import 'package:skribby/widgets/chat/chat_widget.dart';
 
-/// Game View - Main game screen with canvas and chat
+/// Game View - Main game screen with canvas and chat (Dark minimalistic theme)
 class GameView extends StatelessWidget {
   final Map<String, String> data;
   final String screenFrom;
@@ -52,7 +52,16 @@ class _GameViewContentState extends State<_GameViewContent> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Choose Color'),
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: const Text(
+          'CHOOSE COLOR',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            letterSpacing: 2,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
         content: SingleChildScrollView(
           child: BlockPicker(
             pickerColor: viewModel.selectedColor,
@@ -65,7 +74,13 @@ class _GameViewContentState extends State<_GameViewContent> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
+            child: Text(
+              'CLOSE',
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7),
+                letterSpacing: 2,
+              ),
+            ),
           ),
         ],
       ),
@@ -95,10 +110,30 @@ class _GameViewContentState extends State<_GameViewContent> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Consumer<GameViewModel>(
+          builder: (context, viewModel, _) => Text(
+            viewModel.roomName.toUpperCase(),
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.7),
+              fontSize: 12,
+              letterSpacing: 4,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Consumer<GameViewModel>(
             builder: (context, viewModel, child) {
               return Column(
@@ -106,50 +141,111 @@ class _GameViewContentState extends State<_GameViewContent> {
                   // Canvas area
                   Container(
                     width: width,
-                    height: height * 0.44,
+                    height: height * 0.42,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: DrawingCanvas(
+                        points: viewModel.points,
+                        onPanStart: (details) => viewModel.addPoint(details.localPosition),
+                        onPanUpdate: (details) => viewModel.addPoint(details.localPosition),
+                        onPanEnd: (_) => viewModel.endStroke(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  // Drawing controls
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children: [
+                        // Color picker
+                        GestureDetector(
+                          onTap: () => _selectColor(context),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: viewModel.selectedColor,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.palette_outlined,
+                              color: viewModel.selectedColor.computeLuminance() > 0.5
+                                  ? Colors.black.withValues(alpha: 0.5)
+                                  : Colors.white.withValues(alpha: 0.7),
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        
+                        // Stroke width slider
+                        Expanded(
+                          child: SliderTheme(
+                            data: SliderThemeData(
+                              activeTrackColor: Colors.white,
+                              inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
+                              thumbColor: Colors.white,
+                              overlayColor: Colors.white.withValues(alpha: 0.1),
+                              trackHeight: 2,
+                              thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 6,
+                              ),
+                            ),
+                            child: Slider(
+                              min: 1.0,
+                              max: 10.0,
+                              value: viewModel.strokeWidth,
+                              onChanged: viewModel.changeStrokeWidth,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        
+                        // Clear button
+                        GestureDetector(
+                          onTap: viewModel.clearCanvas,
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: Colors.white.withValues(alpha: 0.7),
+                              size: 22,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    child: DrawingCanvas(
-                      points: viewModel.points,
-                      onPanStart: (details) => viewModel.addPoint(details.localPosition),
-                      onPanUpdate: (details) => viewModel.addPoint(details.localPosition),
-                      onPanEnd: (_) => viewModel.endStroke(),
-                    ),
                   ),
-                  const SizedBox(height: 8),
-                  
-                  // Drawing controls
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.color_lens, color: viewModel.selectedColor),
-                        onPressed: () => _selectColor(context),
-                      ),
-                      Expanded(
-                        child: Slider(
-                          min: 1.0,
-                          max: 10.0,
-                          label: "Stroke Width ${viewModel.strokeWidth}",
-                          activeColor: viewModel.selectedColor,
-                          value: viewModel.strokeWidth,
-                          onChanged: viewModel.changeStrokeWidth,
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.layers_clear, color: viewModel.selectedColor),
-                        onPressed: viewModel.clearCanvas,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   
                   // Chat area
                   Expanded(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skribby/models/message.dart';
 
-/// Message bubble widget for displaying chat messages
+/// Message bubble widget for displaying chat messages (Dark theme)
 class MessageBubble extends StatelessWidget {
   final Message message;
 
@@ -14,14 +14,15 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     if (message.isSystemMessage) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: Center(
           child: Text(
             message.message,
             style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
+              color: Colors.white.withValues(alpha: 0.4),
+              fontSize: 11,
               fontStyle: FontStyle.italic,
+              letterSpacing: 0.5,
             ),
           ),
         ),
@@ -29,24 +30,25 @@ class MessageBubble extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            message.username,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: Colors.black87,
+            message.username.toUpperCase(),
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 10,
+              color: Colors.white.withValues(alpha: 0.5),
+              letterSpacing: 1,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
             message.message,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.black87,
+              color: Colors.white,
             ),
           ),
         ],

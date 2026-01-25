@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skribby/models/message.dart';
 import 'package:skribby/widgets/chat/message_bubble.dart';
 
-/// Chat widget with messages list and input field
+/// Chat widget with messages list and input field (Dark theme)
 class ChatWidget extends StatelessWidget {
   final List<Message> messages;
   final TextEditingController messageController;
@@ -25,22 +25,27 @@ class ChatWidget extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xFF0A0A0A),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 1,
+              ),
             ),
             child: messages.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
                       'No messages yet',
                       style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+                        color: Colors.white.withValues(alpha: 0.3),
+                        fontSize: 12,
+                        letterSpacing: 1,
                       ),
                     ),
                   )
                 : ListView.builder(
                     controller: scrollController,
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(12),
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       return MessageBubble(message: messages[index]);
@@ -50,64 +55,56 @@ class ChatWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         // Message input
-        _MessageInput(
-          controller: messageController,
-          onSend: onSendMessage,
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF0A0A0A),
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.1),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: messageController,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                  cursorColor: Colors.white,
+                  decoration: InputDecoration(
+                    hintText: 'Type your guess...',
+                    hintStyle: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      fontSize: 14,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                  ),
+                  textInputAction: TextInputAction.send,
+                  onSubmitted: (_) => onSendMessage(),
+                ),
+              ),
+              GestureDetector(
+                onTap: onSendMessage,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  child: Icon(
+                    Icons.send_rounded,
+                    color: Colors.white.withValues(alpha: 0.7),
+                    size: 20,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
-    );
-  }
-}
-
-class _MessageInput extends StatelessWidget {
-  final TextEditingController controller;
-  final VoidCallback onSend;
-
-  const _MessageInput({
-    required this.controller,
-    required this.onSend,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: controller,
-              decoration: const InputDecoration(
-                hintText: 'Type your guess...',
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              ),
-              textInputAction: TextInputAction.send,
-              onSubmitted: (_) => onSend(),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(right: 4),
-            child: IconButton(
-              onPressed: onSend,
-              icon: const Icon(Icons.send_rounded),
-              color: Colors.blue,
-              iconSize: 24,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

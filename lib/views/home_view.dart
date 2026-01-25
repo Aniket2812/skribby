@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skribby/core/utils/slide_page_route.dart';
 import 'package:skribby/views/create_room_view.dart';
 import 'package:skribby/views/join_room_view.dart';
 
@@ -59,9 +60,7 @@ class HomeView extends StatelessWidget {
                       text: 'CREATE',
                       filled: true,
                       onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const CreateRoomView(),
-                        ),
+                        SlidePageRoute(page: const CreateRoomView()),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -69,9 +68,7 @@ class HomeView extends StatelessWidget {
                       text: 'JOIN',
                       filled: false,
                       onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const JoinRoomView(),
-                        ),
+                        SlidePageRoute(page: const JoinRoomView()),
                       ),
                     ),
                   ],

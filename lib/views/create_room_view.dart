@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skribby/core/utils/slide_page_route.dart';
 import 'package:skribby/viewmodels/create_room_viewmodel.dart';
 import 'package:skribby/views/game_view.dart';
 
@@ -41,8 +42,8 @@ class _CreateRoomViewContentState extends State<_CreateRoomViewContent> {
 
     if (viewModel.validate()) {
       Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => GameView(
+        SlidePageRoute(
+          page: GameView(
             data: viewModel.getRoomData(),
             screenFrom: 'createRoom',
           ),
