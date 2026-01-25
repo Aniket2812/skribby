@@ -39,6 +39,22 @@ class GameViewModel extends ChangeNotifier {
   List<Message> get messages => _messages;
   String get nickname => roomData['nickname'] ?? '';
   String get roomName => _dataOfRoom['name'] ?? roomData['name'] ?? '';
+  String get word => _dataOfRoom['word'] ?? '';
+  
+  /// Returns the word as underscores with letter count as subscript
+  /// e.g., "happy" becomes "_ _ _ _ _  ₅"
+  String get wordHint {
+    if (word.isEmpty) return '';
+    final underscores = List.generate(word.length, (_) => '_').join(' ');
+    final subscriptDigits = _toSubscript(word.length);
+    return '$underscores  $subscriptDigits';
+  }
+  
+  /// Converts a number to subscript characters
+  String _toSubscript(int number) {
+    const subscripts = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
+    return number.toString().split('').map((d) => subscripts[int.parse(d)]).join();
+  }
 
   /// Initialize socket connection and listeners
   void _initializeSocket() {

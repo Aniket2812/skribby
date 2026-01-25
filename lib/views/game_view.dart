@@ -92,6 +92,9 @@ class _GameViewContentState extends State<_GameViewContent> {
     viewModel.sendMessage(_messageController.text);
     _messageController.clear();
     
+    // Close the keyboard
+    FocusScope.of(context).unfocus();
+    
     // Scroll to bottom
     Future.delayed(const Duration(milliseconds: 100), () {
       if (_chatScrollController.hasClients) {
@@ -110,6 +113,7 @@ class _GameViewContentState extends State<_GameViewContent> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -120,10 +124,10 @@ class _GameViewContentState extends State<_GameViewContent> {
         ),
         title: Consumer<GameViewModel>(
           builder: (context, viewModel, _) => Text(
-            viewModel.roomName.toUpperCase(),
+            viewModel.wordHint.isNotEmpty ? viewModel.wordHint : viewModel.roomName.toUpperCase(),
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.7),
-              fontSize: 12,
+              fontSize: 14,
               letterSpacing: 4,
               fontWeight: FontWeight.w300,
             ),
