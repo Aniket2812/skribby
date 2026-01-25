@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Custom text field widget with consistent styling
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  
   const CustomTextField({
     super.key,
     required this.controller,
@@ -22,7 +24,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Colors.transparent),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         filled: true,
         fillColor: const Color(0xffF5F6FA),
         hintText: hintText,
